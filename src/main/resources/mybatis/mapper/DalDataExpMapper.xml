@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+		<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boco.mybatis.dao.DalDataExpDao">
+<select id="queryExp" parameterType="com.boco.entity.DalDataExp" resultType="com.boco.entity.DalDataExp">
+	select * from DAL_DATA_EXP where DATA_HOUR = #{data_hour} and DATASOURCENAME = #{datasourcename} and TABLENAME = #{tablename}
+</select>
+	<select id="queryExpByHour" parameterType="com.boco.entity.DalDataExp" resultType="com.boco.entity.DalDataExp">
+	select * from DAL_DATA_EXP where DATA_HOUR = 12
+</select>
+</mapper>

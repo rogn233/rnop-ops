@@ -13,6 +13,15 @@ public class DalDataDetail {
   private java.sql.Timestamp insert_time;
   private String cmd;
   private long num;
+  private long exp_num;
+
+  public long getExp_num() {
+    return exp_num;
+  }
+
+  public void setExp_num(long exp_num) {
+    this.exp_num = exp_num;
+  }
 
   public Timestamp getInsert_time() {
     return insert_time;
@@ -95,6 +104,7 @@ public class DalDataDetail {
             ", insert_time=" + insert_time +
             ", cmd='" + cmd + '\'' +
             ", num=" + num +
+            ", exp_num=" + exp_num +
             '}';
   }
 }

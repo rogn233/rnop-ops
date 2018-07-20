@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boco.mybatis.dao.DalDataProblemDao">
+	<select id="findById" parameterType="java.lang.Long" resultType="com.boco.entity.DalDataDetail">
+		select * from DAL_DATA_PROBLEM where ID = #{id}
+	</select>
+
+	<select id="countAll" resultType="java.lang.Integer">
+		select count(*) from DAL_DATA_PROBLEM
+	</select>
+
+	<select id="queryAll" resultType="com.boco.entity.DalDataDetail">
+		select * from DAL_DATA_PROBLEM
+	</select>
+	<select id="pageQuery" parameterType="com.boco.entity.TableEntity" resultType="com.boco.entity.DalDataDetail">
+		select limit #{page} #{limit} * from DAL_DATA_PROBLEM
+	</select>
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from DAL_DATA_PROBLEM where id=#{id}
+	</delete>
+	<update id="updateById" parameterType="com.boco.entity.DalDataDetail">
+		update DAL_DATA_PROBLEM set NUM = #{num} where ID = #{id}
+	</update>
+	<insert id="insert" parameterType="com.boco.entity.DalDataDetail">
+		insert  into  DAL_DATA_PROBLEM (SOURCE,DATASOURCENAME,TABLENAME,START_TIME,CMD,NUM,EXP_NUM)
+				values (#{source},#{datasourcename},#{tablename},#{start_time},#{cmd},#{num},#{exp_num})
+	</insert>
+	<insert id="insertBatch" parameterType="java.util.List">
+		insert  into  DAL_DATA_PROBLEM (SOURCE,DATASOURCENAME,TABLENAME,START_TIME,CMD,NUM,EXP_NUM)
+		values
+		<foreach collection="list" item="dalDataDetail" index= "index" separator =",">
+			(#{dalDataDetail.source},#{dalDataDetail.datasourcename},#{dalDataDetail.tablename},#{dalDataDetail.start_time},#{dalDataDetail.cmd},#{dalDataDetail.num},#{dalDataDetail.exp_num})
+		</foreach>
+	</insert>
+</mapper>

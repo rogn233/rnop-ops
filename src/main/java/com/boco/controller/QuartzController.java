@@ -29,7 +29,18 @@ public class QuartzController extends BaseController<SystemCron>{
     }
     @RequestMapping("/add")
     public ResponseEntity add(SystemCron job){
-        return super.insert(job);
+        ResponseEntity entity = new ResponseEntity();
+        try {
+            if(quartzManager.addQuartzJob(job,Class.forName(job.getJob()))){
+                job.setStatus(quartzManager.getTriggerStatus(job));
+                int result = service.insert(job);
+                entity.setSuccess(true);
+                entity.setDesc("新増["+result+"]个任务成功");
+            }
+        } catch (ClassNotFoundException | SchedulerException e) {
+            e.printStackTrace();
+        }
+        return entity;
     }
     @RequestMapping("/queryAll")
     public List<SystemCron> queryAll(){

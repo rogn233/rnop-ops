@@ -8,6 +8,6 @@ import java.util.List;
 /**
  * Created by Administrator on 2018/6/16 0016.
  */
-public interface DalDataDetailService extends BaseService<DalDataDetail>{
+public interface DalDataProblemService extends BaseService<DalDataDetail> {
     public int insertBatch(List<DalDataDetail> dalDataDetails);
 }
