@@ -3,6 +3,7 @@ package com.boco.controller;
 import com.boco.entity.DalDataDetail;
 import com.boco.entity.TableEntity;
 import com.boco.mybatis.service.DalDataDetailService;
+import com.boco.mybatis.service.DalDataProblemService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @RequestMapping("/data_monitor")
 public class DalDataDetailController {
     @Resource
-    private DalDataDetailService service;
+    private DalDataProblemService service;
     @RequestMapping("/queryAll")
     public List<DalDataDetail> queryAll(){
         return service.queryAll();

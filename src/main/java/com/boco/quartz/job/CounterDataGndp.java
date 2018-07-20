@@ -45,64 +45,85 @@ public class CounterDataGndp implements Job {
     private void scan_gndp_data() {
         log.info("开始扫描data_gndp数据完整性");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-        String preTime = sdf.format(new Date().getTime()-2 * 60 * 60 * 1000L).substring(0,10);
+        String preTime = sdf.format(new Date().getTime()-3 * 60 * 60 * 1000L).substring(0,10);
         String[] cmds = {
-                "find /opt/npmuser/db_sum/data_gndp/*"+preTime+"/*/*csv.gz"//前一天目录数
-//                "find /opt/npmuser/db_sum/data_gndp/tpd_eutrancell_0_q_"+preTime+"/*/*csv.gz"//前一天目录数
+                "find /opt/npmuser/db_sum/data_gndp/*"+preTime+"/*/*csv.gz"//3小时前的数据文件目录
         };
-        //1.统计前一天所有时间点的目录数，以出现次数最多的做为经验值
         SSHConnectUtil sshConnectUtil = new SSHConnectUtil("性能汇总服务器","10.174.243.76",22,"npmuser","P!nios04",cmds);
         String result = sshConnectUtil.exec().get(0).getReport();
         try {
-            List<String> fileList = IOUtils.readLines(new StringReader(result));
-            String[] subCmds = new String[fileList.size()];
-            List<DalDataDetail> parseFileList = new ArrayList<>();
-            for (int i = 0; i < fileList.size(); i++) {
-                String fileStr = fileList.get(i);
-                subCmds[i] = "zcat "+fileList.get(i)+"|wc -l";
-                String[] strs = fileStr.split("/");
-                String ds_time = strs[strs.length-2];
-                String table_str = strs[strs.length-1];
-                DalDataDetail dalDataDetail = new DalDataDetail();
-                dalDataDetail.setSource("10.174.243.76_data_gndp");
-                dalDataDetail.setDatasourcename(ds_time.substring(0,ds_time.lastIndexOf("_")));
-                dalDataDetail.setCmd(subCmds[i]);
-                dalDataDetail.setTablename(table_str.split("\\.")[0]);
-                dalDataDetail.setStart_time(new Timestamp(sdf.parse(ds_time.substring(ds_time.lastIndexOf("_")+1,ds_time.length())).getTime()));
-                parseFileList.add(dalDataDetail);
-            }
-            sshConnectUtil.setCmds(subCmds);
-            List<LinuxCmdEntity> execResult = sshConnectUtil.exec();
-                for (LinuxCmdEntity cmdEntity : execResult) {
-                    for (DalDataDetail dalDataDetail : parseFileList) {
-                        if(dalDataDetail.getCmd().equals(cmdEntity.getCmd())){
-                            dalDataDetail.setNum(Long.parseLong(cmdEntity.getReport().trim()));
-                            break;
-                        }
-                    }
-                }
-            log.info("插入data_gndp完整性数据["+service.insertBatch(parseFileList)+"]条");
+            List<DalDataDetail> parseFileList = analyzeDataGndp(sdf, sshConnectUtil, result);
             log.info("开始进行完整性分析");
             //查询经验值
-            DalDataExp queryDataExp = new DalDataExp();
-            queryDataExp.setData_hour(Integer.parseInt(preTime.substring(8,10)));
-            List<DalDataExp> dalDataExps = expService.queryExpByHour(queryDataExp);
-            List<DalDataDetail> problemList = new ArrayList<>();
-            for (DalDataExp dalDataExp : dalDataExps) {
-                for (DalDataDetail dalDataDetail : parseFileList) {
-                    if(dalDataDetail.getDatasourcename().equals(dalDataExp.getDatasourcename()) && dalDataDetail.getTablename().equals(dalDataExp.getTablename())){
-                        if(dalDataDetail.getNum() < dalDataExp.getExp_num() * 0.95){
-                            dalDataDetail.setExp_num(dalDataExp.getExp_num());
-                            problemList.add(dalDataDetail);
-                        }
-                    }
-                }
-            }
-            log.info("插入data_gndp完整性分结果数据["+problemService.insertBatch(problemList)+"]条");
+            analyzeExp(preTime, parseFileList);
             log.info("完整性分析结束");
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     *  GNDP数据采集
+     * @param sdf
+     * @param sshConnectUtil
+     * @param result
+     * @return
+     * @throws IOException
+     * @throws ParseException
+     */
+    private List<DalDataDetail> analyzeDataGndp(SimpleDateFormat sdf, SSHConnectUtil sshConnectUtil, String result) throws IOException, ParseException {
+        List<String> fileList = IOUtils.readLines(new StringReader(result));
+        String[] subCmds = new String[fileList.size()];
+        List<DalDataDetail> parseFileList = new ArrayList<>();
+        for (int i = 0; i < fileList.size(); i++) {
+            String fileStr = fileList.get(i);
+            subCmds[i] = "zcat "+fileList.get(i)+"|wc -l";
+            String[] strs = fileStr.split("/");
+            String ds_time = strs[strs.length-2];
+            String table_str = strs[strs.length-1];
+            DalDataDetail dalDataDetail = new DalDataDetail();
+            dalDataDetail.setSource("10.174.243.76_data_gndp");
+            dalDataDetail.setDatasourcename(ds_time.substring(0,ds_time.lastIndexOf("_")));
+            dalDataDetail.setCmd(subCmds[i]);
+            dalDataDetail.setTablename(table_str.split("\\.")[0]);
+            dalDataDetail.setStart_time(new Timestamp(sdf.parse(ds_time.substring(ds_time.lastIndexOf("_")+1,ds_time.length())).getTime()));
+            parseFileList.add(dalDataDetail);
+        }
+        sshConnectUtil.setCmds(subCmds);
+        List<LinuxCmdEntity> execResult = sshConnectUtil.exec();
+        for (LinuxCmdEntity cmdEntity : execResult) {
+            for (DalDataDetail dalDataDetail : parseFileList) {
+                if(dalDataDetail.getCmd().equals(cmdEntity.getCmd())){
+                    dalDataDetail.setNum(Long.parseLong(cmdEntity.getReport().trim()));
+                    break;
+                }
+            }
+        }
+        log.info("插入data_gndp完整性数据["+service.insertBatch(parseFileList)+"]条");
+        return parseFileList;
+    }
+
+    /**
+     * 数据问题分析
+     * @param preTime 数据时间
+     * @param parseFileList 扫描到的文件列表
+     */
+    private void analyzeExp(String preTime, List<DalDataDetail> parseFileList) {
+        DalDataExp queryDataExp = new DalDataExp();
+        queryDataExp.setData_hour(Integer.parseInt(preTime.substring(8,10)));
+        List<DalDataExp> dalDataExps = expService.queryExpByHour(queryDataExp);
+        List<DalDataDetail> problemList = new ArrayList<>();
+        for (DalDataExp dalDataExp : dalDataExps) {
+            for (DalDataDetail dalDataDetail : parseFileList) {
+                if(dalDataDetail.getDatasourcename().equals(dalDataExp.getDatasourcename()) && dalDataDetail.getTablename().equals(dalDataExp.getTablename())){
+                    if(dalDataDetail.getNum() < dalDataExp.getExp_num() * 0.95){
+                        dalDataDetail.setExp_num(dalDataExp.getExp_num());
+                        problemList.add(dalDataDetail);
+                    }
+                }
+            }
+        }
+        log.info("插入data_gndp完整性分结果数据["+problemService.insertBatch(problemList)+"]条");
     }
 
     public static void main(String[] args) throws JobExecutionException {
