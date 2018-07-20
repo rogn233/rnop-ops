@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boco.mybatis.dao.ConnectDao">
+	<select id="findById" parameterType="java.lang.Long" resultType="com.boco.entity.ConnectEntity">
+		select * from connect where ID = #{id}
+	</select>
+
+	<select id="queryAll" resultType="com.boco.entity.ConnectEntity">
+		select * from CONNECT
+	</select>
+	<select id="findByType" parameterType="java.lang.String" resultType="com.boco.entity.ConnectEntity">
+		select * from CONNECT where TYPE = #{type}
+	</select>
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from CONNECT where id=#{id}
+	</delete>
+	<update id="updateById" parameterType="com.boco.entity.ConnectEntity">
+		update CONNECT set TYPE = #{type},IP = #{ip},USERNAME = #{username},
+			PASSWORD = #{password},CREATETIME = #{createTime},SIGN = #{sign},PORT=#{port},NAME=#{name}
+		where id = #{id}
+	</update>
+	<insert id="insertConnect" parameterType="com.boco.entity.ConnectEntity">
+		insert into CONNECT (TYPE, IP, USERNAME, PASSWORD, CREATETIME, SIGN,PORT,NAME)
+		VALUES (#{type},#{ip},#{username},#{password},#{createTime},#{sign},#{port},#{name})
+	</insert>
+</mapper>

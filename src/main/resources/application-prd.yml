@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: jdbc:hsqldb:hsql://101.247.67.17:9001/
+  thymeleaf:
+    cache: true

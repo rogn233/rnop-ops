@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="css/login.css">
+    <title>登录</title>
+</head>
+<body>
+<div class="col-lg-4 col-lg-offset-4  col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2 container col-center-block">
+    <h2 style="color: whitesmoke">欢迎使用RNOP系统</h2>
+    <form th:action="@{/login}" method="post">
+        <div class="input-group input-group-lg">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-user" aria-hidden="true"></i></span>
+            <input class="form-control" type="text" placeholder="请输入用户名" name="username">
+        </div>
+        <div class="input-group input-group-lg">
+            <span class="input-group-addon"><i class="fa fa-keyboard-o" aria-hidden="true"></i></span>
+            <input class="form-control"  type="password" placeholder="请输入密码" name="password">
+        </div>
+        <div class="input-group input-group-lg col-md-12">
+            <input class="btn btn-success btn-block" type="submit" value="登录">
+        </div>
+    </form>
+</div>
+<script src="jquery/jquery.min.js"></script>
+<script src="bootstrap/js/bootstrap.js"></script>
+</body>
+</html>

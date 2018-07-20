@@ -1,0 +1,28 @@
+.fa {
+    color: #0af0ff;
+}
+.navbar-default {
+    background-color: #1484a3;
+}
+
+.navbar-default .navbar-text {
+    color: #f3fafb;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: #f3fafb;
+}
+.navbar-default .navbar-brand {
+    color: #f3fafb;
+}
+
+/*.table-striped > tbody > tr:nth-child(2n+1) > td,*/
+/*.table-striped > tbody > tr:nth-child(2n+1) > th {*/
+    /*background-color: rgb(184, 204, 228);//此处是自己想用的颜色*/
+/*}*/
+.table-base-color {
+    background-color: rgb(219, 229, 241);
+}
+.table-select-color {
+    background-color: rgb(10, 197, 212);
+}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boco.mybatis.dao.DicMapDao">
+	<select id="findById" parameterType="java.lang.Long" resultType="com.boco.entity.DicMap">
+		select * from DIC_MAP where ID = #{id}
+	</select>
+	<select id="queryAll" resultType="com.boco.entity.DicMap">
+		select * from DIC_MAP
+	</select>
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from DIC_MAP where id=#{id}
+	</delete>
+	<update id="updateById" parameterType="com.boco.entity.DicMap">
+		update DIC_MAP set TAB_NAME = #{tab_name},COL_NAME = #{col_name},ZH_NAME = #{zh_name},TYPE=#{type}
+		where id = #{id}
+	</update>
+	<insert id="insert" parameterType="com.boco.entity.DicMap">
+		insert into DIC_MAP (TAB_NAME, COL_NAME, ZH_NAME,TYPE)
+		VALUES (#{tab_name},#{col_name},#{zh_name},#{type})
+	</insert>
+	<select id="queryByTab" parameterType="java.lang.String" resultType="com.boco.entity.DicMap">
+		select * from DIC_MAP where TAB_NAME = #{tab_name} order by ID
+	</select>
+</mapper>

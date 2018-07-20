@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <div style="width: 100%">
+    <form class="form-horizontal" id="common-form" method="post" th:action="${action}">
+        <div class="form-group" th:each="item:${items}">
+            <input th:if="${item.getAttrName() == 'id'}" name="id" th:value="${item.getAttrValue()}" style="display:none;">
+            <label th:if="${item.getAttrName() != 'id'}" class="control-label col-sm-2" th:for="${item.getAttrName()}" th:text="${item.getLabel()}"></label>
+            <div class="col-sm-10">
+                <input th:value="${item.getAttrValue()}" th:type="${item.getType()}" th:name="${item.getAttrName()}" class="form-control" th:id="${item.getAttrName()}" th:if="${item.getType() != 'select' && item.getAttrName() != 'id'}" required>
+                <select th:if="${item.getType() == 'select'}" class="form-control" th:name="${item.getAttrName()}" required>
+                    <option th:each="other:${item.getOthers()}" th:text="${other}"></option>
+                </select>
+            </div>
+        </div>
+    </form>
+  </div>
+</body>
+</html>

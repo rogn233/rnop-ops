@@ -1,0 +1,18 @@
+[
+  {
+    "field": "tab_name",
+    "title": "表格名称"
+  }
+  ,{
+    "field": "col_name",
+    "title": "数据库列名"
+  }
+  ,{
+    "field": "zh_name",
+    "title": "中文名称"
+  }
+  ,{
+    "field": "insert_time",
+    "title": "插入时间"
+  }
+]
