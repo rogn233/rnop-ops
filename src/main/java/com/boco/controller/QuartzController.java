@@ -3,9 +3,12 @@ package com.boco.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.boco.entity.ResponseEntity;
 import com.boco.entity.SystemCron;
+import com.boco.entity.TableEntity;
+import com.boco.mybatis.service.DicMapService;
 import com.boco.mybatis.service.SystemCronService;
 import com.boco.quartz.QuartzManager;
 import org.quartz.SchedulerException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,30 +18,27 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cron")
-public class QuartzController {
+public class QuartzController extends BaseController<SystemCron>{
     @Resource
     private QuartzManager quartzManager;
-    @Resource
     private SystemCronService service;
-
+    @Autowired
+    public QuartzController(SystemCronService service) {
+        this.service = service;
+        super.setService(service);
+    }
     @RequestMapping("/add")
     public ResponseEntity add(SystemCron job){
-        ResponseEntity entity = new ResponseEntity();
-        try {
-            if(quartzManager.addQuartzJob(job,Class.forName(job.getJob()))){
-                job.setStatus(quartzManager.getTriggerStatus(job));
-                int result = service.insert(job);
-                entity.setSuccess(true);
-                entity.setDesc("新増["+result+"]个任务成功");
-            }
-        } catch (ClassNotFoundException | SchedulerException e) {
-            e.printStackTrace();
-        }
-        return entity;
+        return super.insert(job);
     }
     @RequestMapping("/queryAll")
     public List<SystemCron> queryAll(){
-        return service.queryAll();
+        return super.queryAll();
+    }
+
+    @RequestMapping("/pageQuery")
+    public TableEntity pageQuery(TableEntity table){
+        return super.pageQuery(table);
     }
     @RequestMapping("/update")
     public ResponseEntity update(SystemCron job){

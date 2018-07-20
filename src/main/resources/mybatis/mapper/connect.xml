@@ -19,8 +19,14 @@
 			PASSWORD = #{password},CREATETIME = #{createTime},SIGN = #{sign},PORT=#{port},NAME=#{name}
 		where id = #{id}
 	</update>
-	<insert id="insertConnect" parameterType="com.boco.entity.ConnectEntity">
+	<insert id="insert" parameterType="com.boco.entity.ConnectEntity">
 		insert into CONNECT (TYPE, IP, USERNAME, PASSWORD, CREATETIME, SIGN,PORT,NAME)
 		VALUES (#{type},#{ip},#{username},#{password},#{createTime},#{sign},#{port},#{name})
 	</insert>
+	<select id="countAll" resultType="java.lang.Integer">
+		select count(*) from CONNECT
+	</select>
+	<select id="pageQuery" parameterType="com.boco.entity.TableEntity" resultType="com.boco.entity.ConnectEntity">
+		select limit #{page} #{limit} * from CONNECT
+	</select>
 </mapper>

@@ -21,4 +21,11 @@
 	<select id="queryByTab" parameterType="java.lang.String" resultType="com.boco.entity.DicMap">
 		select * from DIC_MAP where TAB_NAME = #{tab_name} order by ID
 	</select>
+
+	<select id="countAll" resultType="java.lang.Integer">
+		select count(*) from DIC_MAP
+	</select>
+	<select id="pageQuery" parameterType="com.boco.entity.TableEntity" resultType="com.boco.entity.DicMap">
+		select limit #{page} #{limit} * from DIC_MAP
+	</select>
 </mapper>

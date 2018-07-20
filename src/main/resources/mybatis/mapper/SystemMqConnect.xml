@@ -16,8 +16,14 @@
 			CCSID=#{ccsid},SYSTEM_MQ_CONNECT.USER=#{user},PASS=#{pass},QMGR=#{qmgr},QNAME=#{qname}
 		where id=#{id}
 	</update>
-	<insert id="insertConnect" parameterType="com.boco.entity.SystemMqConnect">
+	<insert id="insert" parameterType="com.boco.entity.SystemMqConnect">
 		insert into SYSTEM_MQ_CONNECT(name,HOSTNAME,CHANNEL,PORT,CCSID,USER,PASS,QMGR,QNAME)
 				values (#{name},#{hostname},#{channel},#{port},#{ccsid},#{user},#{pass},#{qmgr},#{qname})
 	</insert>
+	<select id="countAll" resultType="java.lang.Integer">
+		select count(*) from SYSTEM_MQ_CONNECT
+	</select>
+	<select id="pageQuery" parameterType="com.boco.entity.TableEntity" resultType="com.boco.entity.SystemMqConnect">
+		select limit #{page} #{limit} * from SYSTEM_MQ_CONNECT
+	</select>
 </mapper>

@@ -49,7 +49,7 @@ $(document).ready(function () {
         });
     });
     $("#set-server-connect").off().on("click",function (e) {
-        buildTable(myTable, "setConnect", "/connect/getAll");
+        buildTable(myTable, "setConnect", "/connect/pageQuery");
         bindAdd("新増服务器连接方式", "setConnect");
         bindEdit("修改服务器连接方式", "setConnect");
         bindDel("/connect/del");
@@ -62,19 +62,19 @@ $(document).ready(function () {
         // buildTable($("#table"),15,36);
     });
     $("#set-db-connect").off().on("click",function (e) {
-        buildTable(myTable, "setDbConnect", "/db_connect/getAll");
+        buildTable(myTable, "setDbConnect", "/db_connect/pageQuery");
         bindAdd("新増数据库连接方式", "setDbConnect");
         bindEdit("修改数据库连接方式", "setDbConnect");
         bindDel("/db_connect/del");
     });
     $("#set-mq-connect").off().on("click",function (e) {
-        buildTable(myTable, "setMqConnect", "/mq_connect/getAll");
+        buildTable(myTable, "setMqConnect", "/mq_connect/pageQuery");
         bindAdd("新増MQ连接方式", "setMqConnect");
         bindEdit("修改MQ连接方式", "setMqConnect");
         bindDel("/mq_connect/del");
     });
     $("#set-cron-job").off().on("click",function (e) {
-        buildTable(myTable, "setQuartz", "/cron/queryAll");
+        buildTable(myTable, "setQuartz", "/cron/pageQuery");
         bindAdd("新増定时任务", "setQuartz");
         bindEdit("修改定时任务", "setQuartz");
         bindDel("/cron/del");
@@ -85,7 +85,6 @@ $(document).ready(function () {
         buildTable(myTable, "dataMonitor", "/data_monitor/pageQuery");
         $("#toolbar").hide();
     });
-
 });
 
 function bindAdd(title, url) {
@@ -248,13 +247,10 @@ function getColumns(tab_name) {
                     sortable: true
                 });
             });
-            console.log(myColumns);
         }
     });
     return myColumns;
 }
-
-
 function buildTableMap($el) {
     $el.bootstrapTable('destroy').bootstrapTable({
         columns: [{
@@ -284,8 +280,22 @@ function buildTableMap($el) {
             }
         ],
         search: true,
-        url: '/dic/queryAll',
-        method: 'get'
+        url: '/dic/pageQuery',
+        type: "post",
+        contentType : "application/x-www-form-urlencoded",
+        cardview:true,
+        sidePagination: "server",
+        queryParams : function (params) {
+            //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            var temp = {
+                limit: params.limit,                         //页面大小
+                page: params.offset,   //页码
+                sort: params.sort,      //排序列名
+                sortOrder: params.order, //排位命令（desc，asc）
+                search:params.searchText
+            };
+            return temp;
+        }
     });
     $("#btn_pause").hide();
     $("#btn_resume").hide();

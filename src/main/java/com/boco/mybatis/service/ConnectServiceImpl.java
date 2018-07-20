@@ -1,6 +1,7 @@
 package com.boco.mybatis.service;
 
 import com.boco.entity.ConnectEntity;
+import com.boco.entity.TableEntity;
 import com.boco.mybatis.dao.ConnectDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +46,18 @@ public class ConnectServiceImpl implements ConnectService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int insertConnect(ConnectEntity connectEntity) {
-        return dao.insertConnect(connectEntity);
+    public int insert(ConnectEntity entity) {
+        return dao.insert(entity);
     }
+
+    @Override
+    public List<ConnectEntity> pageQuery(TableEntity tableEntity) {
+        return dao.pageQuery(tableEntity);
+    }
+
+    @Override
+    public int countAll() {
+        return dao.countAll();
+    }
+
 }

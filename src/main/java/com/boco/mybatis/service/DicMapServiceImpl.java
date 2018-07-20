@@ -1,6 +1,7 @@
 package com.boco.mybatis.service;
 
 import com.boco.entity.DicMap;
+import com.boco.entity.TableEntity;
 import com.boco.mybatis.dao.DicMapDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +39,16 @@ public class DicMapServiceImpl implements DicMapService {
     @Transactional(rollbackFor = Exception.class)
     public int insert(DicMap entity) {
         return dao.insert(entity);
+    }
+
+    @Override
+    public List<DicMap> pageQuery(TableEntity tableEntity) {
+        return dao.pageQuery(tableEntity);
+    }
+
+    @Override
+    public int countAll() {
+        return dao.countAll();
     }
 
     @Override

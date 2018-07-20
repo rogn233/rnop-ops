@@ -14,7 +14,6 @@ import java.util.List;
 public class DalDataDetailController {
     @Resource
     private DalDataDetailService service;
-
     @RequestMapping("/queryAll")
     public List<DalDataDetail> queryAll(){
         return service.queryAll();
@@ -24,8 +23,6 @@ public class DalDataDetailController {
     public TableEntity pageQuery(TableEntity table){
         table.setRows(service.pageQuery(table));
         table.setTotal(service.countAll());
-//        System.out.println(table);
-//        return service.pageQuery((page-1)*rows,rows);
         return table;
     }
 }

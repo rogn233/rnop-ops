@@ -15,8 +15,15 @@
 		update SYSTEM_DB_CONNECT set NAME = #{name},DRIVER = #{driver},URL=#{url},SYSTEM_DB_CONNECT.USER=#{user},PASS=#{pass}
 		where id=#{id}
 	</update>
-	<insert id="insertConnect" parameterType="com.boco.entity.SystemDbConnect">
+	<insert id="insert" parameterType="com.boco.entity.SystemDbConnect">
 		insert into SYSTEM_DB_CONNECT(NAME,DRIVER,URL,USER,PASS)
 				values (#{name},#{driver},#{url},#{user},#{pass})
 	</insert>
+
+	<select id="countAll" resultType="java.lang.Integer">
+		select count(*) from SYSTEM_DB_CONNECT
+	</select>
+	<select id="pageQuery" parameterType="com.boco.entity.TableEntity" resultType="com.boco.entity.SystemDbConnect">
+		select limit #{page} #{limit} * from SYSTEM_DB_CONNECT
+	</select>
 </mapper>

@@ -1,6 +1,7 @@
 package com.boco.mybatis.service;
 
 import com.boco.entity.SystemDbConnect;
+import com.boco.entity.TableEntity;
 import com.boco.mybatis.dao.SystemDbConnectDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,6 @@ public class SystemDbConnectServiceImpl implements SystemDbConnectService {
         return dao.queryAll();
     }
 
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int deleteById(long id) {
@@ -38,7 +38,16 @@ public class SystemDbConnectServiceImpl implements SystemDbConnectService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int insertConnect(SystemDbConnect connectEntity) {
-        return dao.insertConnect(connectEntity);
+    public int insert(SystemDbConnect entity) {
+        return dao.insert(entity);
     }
+    @Override
+    public List<SystemDbConnect> pageQuery(TableEntity tableEntity) {
+        return dao.pageQuery(tableEntity);
+    }
+    @Override
+    public int countAll() {
+        return dao.countAll();
+    }
+
 }
