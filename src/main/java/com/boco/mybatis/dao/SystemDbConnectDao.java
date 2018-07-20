@@ -1,6 +1,8 @@
 package com.boco.mybatis.dao;
 
+import com.boco.entity.ConnectEntity;
 import com.boco.entity.SystemDbConnect;
+import com.boco.entity.TableEntity;
 
 import java.util.List;
 
@@ -13,4 +15,6 @@ public interface SystemDbConnectDao {
     public int deleteById(long id);
     public int updateById(SystemDbConnect connectEntity);
     public int insertConnect(SystemDbConnect connectEntity);
+    public List<SystemDbConnect> pageQuery(TableEntity tableEntity);
+    public int countAll();
 }

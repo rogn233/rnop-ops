@@ -1,6 +1,8 @@
 package com.boco.mybatis.dao;
 
+import com.boco.entity.ConnectEntity;
 import com.boco.entity.SystemMqConnect;
+import com.boco.entity.TableEntity;
 
 import java.util.List;
 
@@ -13,4 +15,6 @@ public interface SystemMqConnectDao {
     public int deleteById(long id);
     public int updateById(SystemMqConnect connectEntity);
     public int insertConnect(SystemMqConnect connectEntity);
+    public List<SystemMqConnect> pageQuery(TableEntity tableEntity);
+    public int countAll();
 }

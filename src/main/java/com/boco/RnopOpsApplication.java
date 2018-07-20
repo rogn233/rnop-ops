@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @MapperScan("com.boco.mybatis.dao")
 public class RnopOpsApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(RnopOpsApplication.class, args);
+    public static void main(String[] args) {SpringApplication.run(RnopOpsApplication.class, args);
     }
 }
